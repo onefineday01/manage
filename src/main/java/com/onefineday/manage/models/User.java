@@ -24,4 +24,18 @@ public class User extends Updationentity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "ENUM('ADMIN', 'USER') DEFAULT 'USER'")  // Default value for role
     private Role role = Role.USER;  // Sets default value for role in code
+
+
+    public String getRole() {
+        return role.toString();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
 }
