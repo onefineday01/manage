@@ -1,13 +1,21 @@
 package com.onefineday.manage.controllers;
 
 
-import com.onefineday.manage.dto.ApiResponse;
+import com.onefineday.manage.security.AuthenticationRequest;
+import com.onefineday.manage.security.AuthenticationResponse;
+import com.onefineday.manage.services.UserDetailsServiceImpl;
+import com.onefineday.manage.utility.ApiResponse;
 import com.onefineday.manage.models.User;
 import com.onefineday.manage.services.UserService;
+import com.onefineday.manage.utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -17,6 +25,15 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/auth/register")
     public ResponseEntity<ApiResponse<Object>> registerUser(@RequestBody User user) {
@@ -36,9 +53,37 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/auth/login")
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+        try {
+//            System.out.println(authenticationRequest.getUsername());
+//            System.out.println(authenticationRequest.getPassword());
+//            System.exit(1);
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            throw new Exception("Incorrect username or password", e);
+        }
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
+
     @GetMapping("/profile")
-    public User getUserDetails() {
+    public ResponseEntity<ApiResponse<User>> getUserDetails() {
+        ApiResponse<User> userDetail = new ApiResponse<>();
+        userDetail.setData(this.getCurrentUserDetails());
+        userDetail.setSuccess(true);
+        userDetail.setErrors(Collections.emptyList());
+        return ResponseEntity.ok(userDetail);
+    }
+
+    public User getCurrentUserDetails() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userService.getUserDetails(username);
+
     }
 }

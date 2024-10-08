@@ -1,4 +1,4 @@
-package com.onefineday.manage.dto;
+package com.onefineday.manage.utility;
 
 
 import java.util.List;
