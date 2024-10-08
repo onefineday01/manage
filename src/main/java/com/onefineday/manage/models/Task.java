@@ -3,12 +3,16 @@ package com.onefineday.manage.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data // For all getters and setters
 @Entity
 @Table(name = "tasks")  // Unique constraint
-public class Task extends Updationentity{
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,4 +37,12 @@ public class Task extends Updationentity{
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;  // Assuming User is another entity
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "last_updated_at")
+    private LocalDateTime lastUpdatedAt;
 }
