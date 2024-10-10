@@ -37,7 +37,7 @@ public class AuthController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<ApiResponse<Object>> registerUser(@RequestBody User user) {
-    System.out.println(user);
+        // System.out.println(user);
         ApiResponse<Object> response = new ApiResponse<>();
         try {
             userService.registerUser(user);
@@ -56,9 +56,6 @@ public class AuthController {
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         try {
-            // System.out.println(authenticationRequest.getUsername());
-            // System.out.println(authenticationRequest.getPassword());
-            // System.exit(1);
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
