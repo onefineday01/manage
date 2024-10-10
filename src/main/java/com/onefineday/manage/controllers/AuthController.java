@@ -56,9 +56,9 @@ public class AuthController {
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         try {
-//            System.out.println(authenticationRequest.getUsername());
-//            System.out.println(authenticationRequest.getPassword());
-//            System.exit(1);
+            // System.out.println(authenticationRequest.getUsername());
+            // System.out.println(authenticationRequest.getPassword());
+            // System.exit(1);
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );

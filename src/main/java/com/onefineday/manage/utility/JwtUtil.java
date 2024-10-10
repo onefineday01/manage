@@ -72,7 +72,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Token valid for 24 hours
-                .signWith(key)  // Use the secure key
+                .signWith(SignatureAlgorithm.HS256, key)  // Use the secure key
                 .compact();
     }
 
