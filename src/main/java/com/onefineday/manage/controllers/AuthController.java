@@ -37,18 +37,12 @@ public class AuthController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<ApiResponse<Object>> registerUser(@RequestBody User user) {
-        // System.out.println(user);
-        ApiResponse<Object> response = new ApiResponse<>();
         try {
             userService.registerUser(user);
-            response.setData(user);  // Empty list for data in this case
-            response.setSuccess(true);
-            response.setErrors(Collections.emptyList());  // No errors
+            ApiResponse<Object> response = new ApiResponse<>(user, true, Collections.emptyList());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response.setData(Collections.emptyList());
-            response.setSuccess(false);
-            response.setErrors(Collections.singletonList(e.getMessage()));
+            ApiResponse<Object> response = new ApiResponse<>(Collections.emptyList(), false, Collections.singletonList(e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -71,10 +65,7 @@ public class AuthController {
 
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<User>> getUserDetails() {
-        ApiResponse<User> userDetail = new ApiResponse<>();
-        userDetail.setData(this.getCurrentUserDetails());
-        userDetail.setSuccess(true);
-        userDetail.setErrors(Collections.emptyList());
+        ApiResponse<User> userDetail = new ApiResponse<>(this.getCurrentUserDetails(), true, Collections.emptyList());
         return ResponseEntity.ok(userDetail);
     }
 

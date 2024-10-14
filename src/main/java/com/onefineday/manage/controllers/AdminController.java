@@ -20,10 +20,7 @@ public class AdminController {
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
-        ApiResponse<List<User>> userList = new ApiResponse<>();
-        userList.setData(userService.getAllUsers());
-        userList.setSuccess(true);
-        userList.setErrors(Collections.emptyList());
+        ApiResponse<List<User>> userList = new ApiResponse<>(userService.getAllUsers(), true, Collections.emptyList());
         return ResponseEntity.ok(userList);
     }
 }
