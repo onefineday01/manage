@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,5 +35,10 @@ public class TaskController {
     public ResponseEntity<ApiResponse<Task>> updateTask(@PathVariable Long id, @RequestBody Map<String, Object> taskDetails) {
         Task updatedTask = taskService.updateTask(id, taskDetails);
         return ResponseEntity.ok(new ApiResponse<>(updatedTask, true, Collections.emptyList()));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<List<Task>>> getTasks() {
+        return ResponseEntity.ok(new ApiResponse<>(taskService.getTasks(), true, Collections.emptyList()));
     }
 }

@@ -1,6 +1,5 @@
 package com.onefineday.manage.models;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,8 +36,8 @@ public class Task {
     private String category;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;  // Assuming User is another entity
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

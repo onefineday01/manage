@@ -1,5 +1,6 @@
 package com.onefineday.manage.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data // For all getters and setters
 @Entity
@@ -40,6 +42,21 @@ public class User {
     @Column(name = "last_updated_at")
     private LocalDateTime lastUpdatedAt;
 
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    @JsonManagedReference
+//    private List<Task> tasks;
+//
+//    public List<Task> getTasks() {
+//        return tasks;
+//    }
+//
+//    public void setTasks(List<Task> tasks) {
+//        this.tasks = tasks;
+//    }
+
+    public Long getId() {
+        return id;
+    }
     public String getRole() {
         return role.toString();
     }
