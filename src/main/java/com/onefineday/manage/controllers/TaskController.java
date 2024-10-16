@@ -40,11 +40,11 @@ public class TaskController {
 
     @GetMapping("")
     public ResponseEntity<ApiResponse<PaginatedResponse<Task>>> getTasks(
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(required = false, defaultValue = "") String sortBy,
             @RequestParam(required = false, defaultValue = "asc") String sortOrder,
             @RequestParam(required = false, defaultValue = "1") Integer pageNo,
-            @RequestParam(required = false, defaultValue = "1") Integer pageCount
+            @RequestParam(required = false, defaultValue = "10") Integer pageCount
     ) {
         return ResponseEntity.ok(new ApiResponse<>(taskService.getTasks(search, sortBy, sortOrder, pageNo -1 , pageCount), true, Collections.emptyList()));
     }

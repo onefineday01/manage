@@ -7,6 +7,7 @@ import com.onefineday.manage.utility.PaginatedResponse;
 import com.onefineday.manage.utility.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,15 @@ public class TaskService {
         User user = userRepository.findByUsername(userDetails.getUsername());
         Role userRole = Role.valueOf(user.getRole());
 
-        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        Sort sort = Sort.by("id").descending();
+        if(!sortBy.isEmpty()){
+            if (!sortOrder.isEmpty()) {
+                sort = sortOrder.equals("asc")  ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            } else {
+                sort = Sort.by(sortBy).ascending();
+            }
+        }
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize, sort);
 
         if(userRole.equals(Role.valueOf("ADMIN"))) {
             return new PaginatedResponse<>(taskRepository.findAll(pageRequest));
