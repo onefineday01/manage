@@ -3,6 +3,7 @@ package com.onefineday.manage.controllers;
 import com.onefineday.manage.models.Task;
 import com.onefineday.manage.services.TaskService;
 import com.onefineday.manage.utility.ApiResponse;
+import com.onefineday.manage.utility.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,13 @@ public class TaskController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<Task>>> getTasks() {
-        return ResponseEntity.ok(new ApiResponse<>(taskService.getTasks(), true, Collections.emptyList()));
+    public ResponseEntity<ApiResponse<PaginatedResponse<Task>>> getTasks(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String sortOrder,
+            @RequestParam(required = false, defaultValue = "1") Integer pageNo,
+            @RequestParam(required = false, defaultValue = "1") Integer pageCount
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>(taskService.getTasks(search, sortBy, sortOrder, pageNo -1 , pageCount), true, Collections.emptyList()));
     }
 }

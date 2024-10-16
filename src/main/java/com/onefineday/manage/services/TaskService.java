@@ -3,13 +3,13 @@ package com.onefineday.manage.services;
 import com.onefineday.manage.models.*;
 import com.onefineday.manage.repositories.TaskRepository;
 import com.onefineday.manage.repositories.UserRepository;
+import com.onefineday.manage.utility.PaginatedResponse;
 import com.onefineday.manage.utility.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -58,13 +58,17 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public List<Task> getTasks() {
+    public PaginatedResponse<Task> getTasks(String search, String sortBy, String sortOrder, int pageNo, int pageSize) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername());
         Role userRole = Role.valueOf(user.getRole());
+
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+
         if(userRole.equals(Role.valueOf("ADMIN"))) {
-            return taskRepository.findAll();
+            return new PaginatedResponse<>(taskRepository.findAll(pageRequest));
         }
-        return taskRepository.findAllByUserId(user.getId());
+
+        return new PaginatedResponse<>(taskRepository.findAllByUserId(user.getId(), pageRequest));
     }
 }
